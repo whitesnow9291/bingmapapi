@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
 	//var autocomplete1 = new google.maps.places.Autocomplete(document.getElementById('starting'));
     //var autocomplete2 = new google.maps.places.Autocomplete(document.getElementById('origin'));
     //var autocomplete3 = new google.maps.places.Autocomplete(document.getElementById('destination'));
-
+		var BingMapsKey = "BSMNNLLc1rjAlvJElfwN~TMwyjXx5IGREOD9GedzmrA~AsR43Rn6QpVCNWqW2Dmq73dT9lCQ8YEZ4neZFWiWmOWCPplHP_2vlERKHpGhO32Y";
     var popup = $('#map-popup-wrap'),
     	popup2 = $('#map-popup-wrap-2');
     var showMapsPopup = function() {
@@ -70,6 +70,7 @@ jQuery(document).ready(function($) {
     };
 
 	var getRoute = function() {
+
 		var start = document.getElementById('origin').value,
 			end   = document.getElementById('destination').value;
 		if (!start || !end) {
@@ -77,46 +78,57 @@ jQuery(document).ready(function($) {
 			return; }
 
 		$('#directions-missing').fadeOut('fast');
-		var map = new google.maps.Map(document.getElementById('mapDiv'), {}),
-			directionsDisplay = new google.maps.DirectionsRenderer(),
-			directionsService = new google.maps.DirectionsService(),
-			transitDisplay    = new google.maps.DirectionsRenderer(),
-			transitService    = new google.maps.DirectionsService();
-
-	    directionsDisplay.setMap(map);
-	    $('#driving-holder').html('');
-	    $('#transit-holder').html('');
-	    $('#content2').hide();
-	    $('#driving-heading').hide();
-	    $('#transit-heading').hide();
-	    directionsDisplay.setPanel(document.getElementById('driving-holder'));
-	    transitDisplay.setPanel(document.getElementById('transit-holder'));
-
-		var drivingRequest = {
-			origin:start,
-			destination:end,
-			travelMode: google.maps.TravelMode.DRIVING
-		};
-		directionsService.route(drivingRequest, function(response, status) {
-			if (status == google.maps.DirectionsStatus.OK) {
-				$('#driving-heading').show();
-				directionsDisplay.setDirections(response);
-			}
+		$('#driving-holder').html('');
+		$('#transit-holder').html('');
+		$('#content2').hide();
+		$('#driving-heading').hide();
+		$('#transit-heading').hide();
+		// var map = new google.maps.Map(document.getElementById('mapDiv'), {}),
+		// 	directionsDisplay = new google.maps.DirectionsRenderer(),
+		// 	directionsService = new google.maps.DirectionsService(),
+		// 	transitDisplay    = new google.maps.DirectionsRenderer(),
+		// 	transitService    = new google.maps.DirectionsService();
+		//
+	  //   directionsDisplay.setMap(map);
+		//
+	  //   directionsDisplay.setPanel(document.getElementById('driving-holder'));
+	  //   transitDisplay.setPanel(document.getElementById('transit-holder'));
+		//
+		// var drivingRequest = {
+		// 	origin:start,
+		// 	destination:end,
+		// 	travelMode: google.maps.TravelMode.DRIVING
+		// };
+		// directionsService.route(drivingRequest, function(response, status) {
+		// 	if (status == google.maps.DirectionsStatus.OK) {
+		// 		$('#driving-heading').show();
+		// 		directionsDisplay.setDirections(response);
+		// 	}
+		// });
+		//
+		// var transitRequest = {
+		// 	origin:start,
+		// 	destination:end,
+		// 	travelMode: google.maps.TravelMode.TRANSIT
+		// };
+		// transitService.route(transitRequest, function(response, status) {
+		// 	if (status == google.maps.DirectionsStatus.OK) {
+		// 		$('#transit-heading').show();
+		// 		transitDisplay.setDirections(response);
+		// 	}
+		// });
+		var transiturl ="http://dev.virtualearth.net/REST/V1/Routes/Transit?wp.0=Golden%20Gate%20Bridge&wp.1=Fishermans%20Wharf&timeType=Departure&dateTime=3:00:00PM&key="+BingMapsKey; //"http://dev.virtualearth.net/REST/V1/Routes/Transit?wp.0="+start+"&wp.1="+end+"&output=json&key="+BingMapsKey;
+		var directionurl ="http://dev.virtualearth.net/REST/V1/Routes/Transit?wp.0=Golden%20Gate%20Bridge&wp.1=Fishermans%20Wharf&timeType=Departure&dateTime=3:00:00PM&key="+BingMapsKey; // "http://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0="+start+"&wp.1="+end+"&output=json&key="+BingMapsKey;
+		$.get(transiturl, function(data){
+		  console.log("Data: " + data);
 		});
+		// var transitRequestPromise = $.get(transiturl);
+		// var directionRequestPromise = $.get(directionurl);
+	// 	$.when(transitRequestPromise, directionRequestPromise).done(function(transitData, directionData) {
+	// 		showMapsPopup();
+  // // do something
+	//   });
 
-		var transitRequest = {
-			origin:start,
-			destination:end,
-			travelMode: google.maps.TravelMode.TRANSIT
-		};
-		transitService.route(transitRequest, function(response, status) {
-			if (status == google.maps.DirectionsStatus.OK) {
-				$('#transit-heading').show();
-				transitDisplay.setDirections(response);
-			}
-		});
-
-		showMapsPopup();
 	};
 
 	$('#directions').hide();
@@ -158,5 +170,3 @@ jQuery(document).ready(function($) {
 	});
 
 });
-
-
